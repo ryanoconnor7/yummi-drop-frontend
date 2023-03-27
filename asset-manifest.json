@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/yummi-drop-frontend/static/css/main.0b8a72e2.css",
+    "main.js": "/yummi-drop-frontend/static/js/main.b01ded87.js",
+    "static/js/787.1434e6c4.chunk.js": "/yummi-drop-frontend/static/js/787.1434e6c4.chunk.js",
+    "index.html": "/yummi-drop-frontend/index.html",
+    "main.0b8a72e2.css.map": "/yummi-drop-frontend/static/css/main.0b8a72e2.css.map",
+    "main.b01ded87.js.map": "/yummi-drop-frontend/static/js/main.b01ded87.js.map",
+    "787.1434e6c4.chunk.js.map": "/yummi-drop-frontend/static/js/787.1434e6c4.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0b8a72e2.css",
+    "static/js/main.b01ded87.js"
+  ]
+}

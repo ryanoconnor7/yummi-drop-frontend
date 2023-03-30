@@ -1,15 +1,17 @@
 {
   "files": {
     "main.css": "/yummi-drop-frontend/static/css/main.0b8a72e2.css",
-    "main.js": "/yummi-drop-frontend/static/js/main.96de5767.js",
+    "main.js": "/yummi-drop-frontend/static/js/main.3dd119d2.js",
+    "static/js/483.c33d461e.chunk.js": "/yummi-drop-frontend/static/js/483.c33d461e.chunk.js",
     "static/js/787.1434e6c4.chunk.js": "/yummi-drop-frontend/static/js/787.1434e6c4.chunk.js",
     "index.html": "/yummi-drop-frontend/index.html",
     "main.0b8a72e2.css.map": "/yummi-drop-frontend/static/css/main.0b8a72e2.css.map",
-    "main.96de5767.js.map": "/yummi-drop-frontend/static/js/main.96de5767.js.map",
+    "main.3dd119d2.js.map": "/yummi-drop-frontend/static/js/main.3dd119d2.js.map",
+    "483.c33d461e.chunk.js.map": "/yummi-drop-frontend/static/js/483.c33d461e.chunk.js.map",
     "787.1434e6c4.chunk.js.map": "/yummi-drop-frontend/static/js/787.1434e6c4.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.0b8a72e2.css",
-    "static/js/main.96de5767.js"
+    "static/js/main.3dd119d2.js"
   ]
 }

@@ -25,12 +25,13 @@ const Container = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-right: 8px;
+    margin-right: 4px;
+    margin-bottom: 4px;
 `
 const Title = styled.p`
     font-weight: 500;
     font-size: 15px;
-    padding-right: 6px;
+    padding-right: 4px;
 `
 const ChevronDown = () => (
     <svg width="15" height="10" viewBox="0 0 15 10" fill="none" xmlns="http://www.w3.org/2000/svg">

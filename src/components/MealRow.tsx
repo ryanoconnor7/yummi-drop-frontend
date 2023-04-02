@@ -1,10 +1,12 @@
 import moment from 'moment'
 import styled from 'styled-components'
-import { Meal, User } from '../Types'
+import { Meal, Position } from '../types/Meal'
+import { User } from '../types/Types'
+import { distanceMiles } from '../utils/LocationUtils'
 
-function MealRow(props: { meal: Meal }) {
-    const distance = 0.0
-    let pickupDate = moment(props.meal.pickupTime)
+function MealRow(props: { meal: Meal; userLoc: Position }) {
+    const distance = distanceMiles(props.userLoc, props.meal.pickupLocation)
+    let pickupDate = moment.unix(props.meal.pickupTime._seconds)
     let pickupTimeString = 'Pickup '
     if (pickupDate.isBefore(moment())) {
         // pickupTimeString += pickupDate.format('M/D')

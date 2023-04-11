@@ -11,6 +11,8 @@ import { initializeApp } from 'firebase/app'
 import { User as FBUser, getAuth, onAuthStateChanged } from 'firebase/auth'
 import Profile from './screens/Profile'
 import { User, getCurrentUser } from './types/Types'
+import NewMeal from './screens/NewMeal'
+import MealDetail from './screens/MealDetail'
 
 const firebaseConfig = {
     apiKey: 'AIzaSyDZEQzH53xpKIw6Cnj0O4DazC_sFT7e560',
@@ -27,6 +29,7 @@ export const auth = getAuth(app)
 
 function App() {
     const [user, setUser] = useState<User | undefined>(undefined)
+    const [fbUser, setFbUser] = useState<FBUser | null>(null)
     const [userLoading, setUserLoading] = useState(true)
     const fetchUser = async (fbUser: FBUser) => {
         const user = await getCurrentUser(fbUser)
@@ -35,8 +38,9 @@ function App() {
     }
 
     useEffect(() => {
-        onAuthStateChanged(auth, user => {
-            if (user) fetchUser(user)
+        onAuthStateChanged(auth, newFbUser => {
+            setFbUser(newFbUser)
+            if (newFbUser) fetchUser(newFbUser)
         })
     }, [])
     return (
@@ -44,8 +48,20 @@ function App() {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <div className="App">
                     <Routes>
-                        <Route path="/" element={<Home user={user} />} />
-                        <Route path="/profile" element={<Profile user={user} />} />
+                        <Route path="/" element={<Home user={user} />}>
+                            <Route
+                                path="/profile"
+                                element={<Profile user={user} fbUser={auth.currentUser} />}
+                            />
+                            <Route
+                                path="/meal/new"
+                                element={<NewMeal user={user} fbUser={auth.currentUser} />}
+                            />
+                            <Route
+                                path="/meal/:id"
+                                element={<MealDetail user={user} fbUser={auth.currentUser} />}
+                            />
+                        </Route>
                     </Routes>
                 </div>
             </LocalizationProvider>

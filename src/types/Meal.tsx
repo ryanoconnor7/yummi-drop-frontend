@@ -18,8 +18,10 @@ export interface Meal {
     }
     portions: number
     summary: string
+    ingredients: string
     imageUrl: string
     chef?: User
+    id: string
 }
 
 const meal: Meal = {
@@ -31,18 +33,22 @@ const meal: Meal = {
     pickupTime: { _seconds: 1680217200 },
     portions: 8,
     summary:
-        'A tasty and healthy meal based on the traditional Kale Chicken Caesar with a homemade touch. Ingredients: chicken, kale, peppers, salt, pepper, caesar',
+        'A tasty and healthy meal based on the traditional Kale Chicken Caesar with a homemade touch.',
+    ingredients: 'chicken, kale, peppers, salt, pepper, caesar',
     imageUrl:
         'https://images.unsplash.com/photo-1608897013039-887f21d8c804?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8cGFzdGF8ZW58MHx8MHx8&w=1000&q=80',
-    chef: exampleChef
+    chef: exampleChef,
+    id: '123'
 }
 
 export const testMeals: Meal[] = [meal, meal, meal]
 
 export interface GetMealsParams {
     portionSize: number
-    location: Position
     category: string
+    lat: number
+    lon: number
+    pickupDate: string
 }
 
 export async function getMeals(params: GetMealsParams): Promise<Meal[]> {
@@ -55,4 +61,28 @@ export async function getMeals(params: GetMealsParams): Promise<Meal[]> {
     console.log('Meals json:', json)
 
     return json?.meals ?? []
+}
+
+interface OrderResponse {
+    meal: Meal
+    orderedMeal: Meal
+}
+
+export async function reserveMeal(meal: Meal, portions: number): Promise<OrderResponse> {
+    const url = `${BACKEND_URL}/meals/order`
+    const params = {
+        mealId: meal.id,
+        chefId: meal.chef?.id,
+        portionsRequested: portions
+    }
+
+    const res = await fetch(url, {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        body: JSON.stringify(params)
+    })
+    const json = await res.json()
+    console.log('Meals json:', json)
+
+    return json
 }

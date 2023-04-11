@@ -4,12 +4,13 @@ import moment from 'moment'
 import { useState } from 'react'
 import styled from 'styled-components'
 import { categories } from '../types/Types'
+import PortionSize from './PortionSize'
 
 export const isDesktop = () => {
     console.log('width: ', window.innerWidth)
     return window.innerWidth >= 500
 }
-interface SharedSheetProps {
+export interface SharedSheetProps {
     onCancel: () => void
 }
 export const Sheet = (props: { children?: any } & SharedSheetProps) => {
@@ -77,25 +78,13 @@ export const PortionSizeSheet = (
     return (
         <Sheet onCancel={() => {}}>
             <PortionSizeTitle>Portion Size</PortionSizeTitle>
-            <Row style={{ marginTop: 16, marginBottom: 16 }}>
-                <div style={{ flexGrow: 1 }} />
-                <PortionSizeButton
-                    className="btn"
-                    style={{ opacity: value > 1 ? 1 : 0.5 }}
-                    onClick={value > 1 ? () => setValue(value - 1) : undefined}
-                >
-                    –
-                </PortionSizeButton>
-                <PortionSizeQuantity>{value}</PortionSizeQuantity>
-                <PortionSizeButton
-                    className="btn"
-                    style={{ opacity: value < 8 ? 1 : 0.5 }}
-                    onClick={value < 8 ? () => setValue(value + 1) : undefined}
-                >
-                    +
-                </PortionSizeButton>
-                <div style={{ flexGrow: 1 }} />
-            </Row>
+            <PortionSize
+                minValue={1}
+                maxValue={8}
+                setValue={val => setValue(val)}
+                value={value}
+                size={36}
+            />
             <UpdateButton
                 onClick={() => {
                     props.onValueChange(value)
@@ -137,11 +126,6 @@ const BottomSheet = styled(BaseSheet)`
 const PopupSheet = styled(BaseSheet)`
     border-radius: 24px;
 `
-const Row = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-`
 
 // --- DATE ---
 
@@ -171,21 +155,6 @@ const PortionSizeTitle = styled.p`
     font-weight: 700;
     font-size: 18px;
     text-align: left;
-`
-const PortionSizeQuantity = styled.div`
-    font-weight: 600;
-    font-size: 36px;
-    margin: 24px;
-    font-variant-numeric: tabular-nums;
-    user-select: none;
-`
-const PortionSizeButton = styled.p`
-    font-weight: 500;
-    font-size: 36px;
-    width: 51px;
-    height: 51px;
-    background: #d9d9d9;
-    border-radius: 26px;
 `
 const UpdateButton = styled.p`
     font-weight: 500;

@@ -4,7 +4,7 @@ import { Meal, Position } from '../types/Meal'
 import { User } from '../types/Types'
 import { distanceMiles } from '../utils/LocationUtils'
 
-function MealRow(props: { meal: Meal; userLoc: Position }) {
+function MealRow(props: { meal: Meal; userLoc: Position; onPress: () => void }) {
     const distance = distanceMiles(props.userLoc, props.meal.pickupLocation)
     let pickupDate = moment.unix(props.meal.pickupTime._seconds)
     let pickupTimeString = 'Pickup '
@@ -21,7 +21,7 @@ function MealRow(props: { meal: Meal; userLoc: Position }) {
     }
 
     return (
-        <Container>
+        <Container onClick={props.onPress}>
             <MealImage src={props.meal.imageUrl} />
             <Details>
                 <Title>{props.meal.mealName}</Title>
@@ -53,6 +53,7 @@ const Container = styled.div`
     margin: 0px 24px;
     padding: 12px 0px;
     border-bottom: 0.5px solid rgba(0, 0, 0, 0.15);
+    cursor: pointer;
 `
 const MealImage = styled.img`
     width: 112px;

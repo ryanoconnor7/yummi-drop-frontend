@@ -8,6 +8,7 @@ export interface User {
     lastName: string
     username: string
     profilePicUrl: string
+    id: string
 }
 
 export const exampleChef: User = {
@@ -15,7 +16,8 @@ export const exampleChef: User = {
     firstName: 'John',
     lastName: 'Appleseed',
     chefDetails: 'I like to cook',
-    profilePicUrl: 'https://d2az3zd39o5d63.cloudfront.net/linkedin-profile-picture-sunglasses.jpg'
+    profilePicUrl: 'https://d2az3zd39o5d63.cloudfront.net/linkedin-profile-picture-sunglasses.jpg',
+    id: '345'
 }
 
 export const categories = [

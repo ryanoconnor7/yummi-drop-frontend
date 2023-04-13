@@ -1,6 +1,9 @@
-import { getAuth, getIdToken, User as FBUser } from 'firebase/auth'
+import { getAuth, getIdToken, User as FUser } from 'firebase/auth'
 import { BACKEND_URL } from '../utils/Constants'
 import { auth } from '../App'
+import { authenticatedHeaders } from '../utils/AuthUtils'
+
+export type FBUser = FUser
 
 export interface User {
     chefDetails: string
@@ -33,24 +36,3 @@ export const categories = [
     'Vegan',
     'Gluten Free'
 ]
-
-export async function getCurrentUser(fbUser: FBUser): Promise<User> {
-    const token = await fbUser?.getIdToken()
-
-    console.log('Token:', token)
-
-    if (!token) throw 'Missing user or ID token'
-
-    const url = `${BACKEND_URL}/users`
-    const res = await fetch(url, {
-        method: 'GET',
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-    console.log('Current user res:', res)
-
-    const json = await res.json()
-
-    return json
-}

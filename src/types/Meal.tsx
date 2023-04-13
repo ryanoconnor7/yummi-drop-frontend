@@ -1,6 +1,10 @@
+import { getDownloadURL, ref, uploadBytes, uploadString } from 'firebase/storage'
 import { BACKEND_URL } from '../utils/Constants'
 import { objToQueryString } from '../utils/StringUtils'
-import { exampleChef, User } from './Types'
+import { exampleChef, FBUser, User } from './Types'
+import { storage } from '../App'
+import { uniqueId } from 'lodash'
+import { authenticatedHeaders } from '../utils/AuthUtils'
 
 export interface Position {
     _latitude: number
@@ -68,7 +72,11 @@ interface OrderResponse {
     orderedMeal: Meal
 }
 
-export async function reserveMeal(meal: Meal, portions: number): Promise<OrderResponse> {
+export async function reserveMeal(
+    fbUser: FBUser,
+    meal: Meal,
+    portions: number
+): Promise<OrderResponse> {
     const url = `${BACKEND_URL}/meals/order`
     const params = {
         mealId: meal.id,
@@ -77,7 +85,7 @@ export async function reserveMeal(meal: Meal, portions: number): Promise<OrderRe
     }
 
     const res = await fetch(url, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: await authenticatedHeaders(fbUser),
         method: 'POST',
         body: JSON.stringify(params)
     })
@@ -85,4 +93,63 @@ export async function reserveMeal(meal: Meal, portions: number): Promise<OrderRe
     console.log('Meals json:', json)
 
     return json
+}
+
+interface CreateMealParams {
+    calories: number
+    cost: number
+    category: string
+    title: string
+    pickupLocation: number[]
+    pickupTime: string
+    summary: string
+    portions: number
+    imageUrl?: string
+}
+
+export async function createMeal(
+    fbUser: FBUser,
+    params: CreateMealParams,
+    imageContents: string,
+    imageName: string
+): Promise<Meal | undefined> {
+    // Create meal
+    const headers = await authenticatedHeaders(fbUser)
+    const res = await fetch(`${BACKEND_URL}/meals`, {
+        headers,
+        method: 'POST',
+        body: JSON.stringify(params)
+    })
+    let meal: Meal = await res.json()
+    console.log('New meal json:', meal)
+
+    try {
+        // Upload meal image
+        const extension = imageName.split('.')[1].toLowerCase()
+        const fileName = `mealImages/${meal.id}.${extension}`
+        console.log('image filename:', fileName)
+        const fileRef = ref(storage, fileName)
+
+        const result = await uploadString(fileRef, imageContents, 'data_url', {
+            contentType: 'image/' + extension
+        })
+
+        const downloadUrl = await getDownloadURL(result.ref)
+
+        const updateParams = {
+            imageUrl: downloadUrl
+        }
+
+        const updateRes = await fetch(`${BACKEND_URL}/meals/${meal.id}`, {
+            headers,
+            method: 'PATCH',
+            body: JSON.stringify(updateParams)
+        })
+
+        meal = await updateRes.json()
+    } catch (e) {
+        console.log('Error uploading meal image:', e)
+    }
+
+    return meal
 }

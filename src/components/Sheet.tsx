@@ -60,13 +60,22 @@ export const DatePickerSheet = (
 }
 
 export const CategorySheet = (
-    props: { onValueChange: (val: string) => void } & SharedSheetProps
+    props: {
+        onValueChange: (val: string | undefined) => void
+        showAll?: boolean
+    } & SharedSheetProps
 ) => {
     return (
-        <CategorySelect title="Category" onChange={e => props.onValueChange(e.target.value)}>
-            {categories.map(c => (
-                <option value={c}>{c}</option>
-            ))}
+        <CategorySelect
+            title="Category"
+            onChange={e =>
+                props.onValueChange(e.target.value === 'Select' ? undefined : e.target.value)
+            }
+        >
+            {categories.map((c, i) => {
+                const value = props.showAll === false && i == 0 ? 'Select' : c
+                return <option value={value}>{value === 'Select' ? '---Select---' : value}</option>
+            })}
         </CategorySelect>
     )
 }

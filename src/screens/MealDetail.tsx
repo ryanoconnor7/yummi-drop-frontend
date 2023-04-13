@@ -13,6 +13,7 @@ import { MAPBOX_API_KEY } from './Home'
 import { useState } from 'react'
 import PortionSize from '../components/PortionSize'
 import { lightColors } from '../utils/Colors'
+import { login } from './Login'
 
 const MealDetail = (props: { user?: User; fbUser?: FBUser | null }) => {
     const navigate = useNavigate()
@@ -24,12 +25,20 @@ const MealDetail = (props: { user?: User; fbUser?: FBUser | null }) => {
 
     const reservePressed = async () => {
         setIsReserving(true)
-        try {
-            const reserveResponse = await reserveMeal(meal!, portions)
-            setReservedMeal(reserveResponse.orderedMeal)
+        if (!props.fbUser) {
+            try {
+                await login()
+            } catch (e) {}
             setIsReserving(false)
-        } catch {
-            setIsReserving(false)
+            return
+        } else {
+            try {
+                const reserveResponse = await reserveMeal(props.fbUser!, meal!, portions)
+                setReservedMeal(reserveResponse.orderedMeal)
+                setIsReserving(false)
+            } catch {
+                setIsReserving(false)
+            }
         }
     }
 
@@ -124,7 +133,7 @@ const MealDetail = (props: { user?: User; fbUser?: FBUser | null }) => {
                                     <Portions>Portions</Portions>
                                     <PortionSize
                                         minValue={1}
-                                        maxValue={8}
+                                        maxValue={meal.portions}
                                         setValue={val => setPortions(val)}
                                         value={portions}
                                         size={18}
@@ -139,7 +148,11 @@ const MealDetail = (props: { user?: User; fbUser?: FBUser | null }) => {
                                     className={isReserving ? undefined : 'btn'}
                                     style={{ opacity: isReserving ? 0.5 : 1.0 }}
                                 >
-                                    {isReserving ? 'Reserving...' : 'Reserve'}
+                                    {!props.fbUser
+                                        ? 'Login to Reserve'
+                                        : isReserving
+                                        ? 'Reserving...'
+                                        : 'Reserve'}
                                 </ReserveButton>
                             </>
                         )}
@@ -241,7 +254,7 @@ const Row = styled.div`
     flex-direction: row;
     align-items: center;
 `
-const ReserveButton = styled.p`
+export const ReserveButton = styled.p`
     font-weight: 500;
     font-size: 17px;
     text-justify: center;

@@ -33,6 +33,7 @@ import { PuffLoader } from 'react-spinners'
 import IonIcon from '@reacticons/ionicons'
 import { bboxOfMeals, getCurrentLocation, getMapPadding } from '../utils/LocationUtils'
 import { BBox, center } from '@turf/turf'
+import blankProfileImage from '../assets/person-circle-outline.png'
 
 // @ts-ignore
 mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default // eslint-disable-line import/no-webpack-loader-syntax
@@ -198,7 +199,7 @@ function Home(props: { user?: User }) {
                             <FilterButton title={category} selected={modalMode === 'category'}>
                                 <CategorySheet
                                     onCancel={() => setModalMode(undefined)}
-                                    onValueChange={val => setCategory(val)}
+                                    onValueChange={val => setCategory(val ?? categories[0])}
                                 />
                             </FilterButton>
                             <FilterButton
@@ -265,7 +266,7 @@ function Home(props: { user?: User }) {
                     navigate('/profile')
                 }}
             >
-                <ProfileButton src={user?.photoURL ?? undefined} />
+                <ProfileButton src={props.user?.profilePicUrl ?? blankProfileImage} />
             </ProfileWrapper>
             <Outlet />
         </div>

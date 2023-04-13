@@ -6,13 +6,14 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Route, Routes } from 'react-router-dom'
-import Login, { login } from './screens/Login'
+import Login, { getCurrentUser, login } from './screens/Login'
 import { initializeApp } from 'firebase/app'
 import { User as FBUser, getAuth, onAuthStateChanged } from 'firebase/auth'
 import Profile from './screens/Profile'
-import { User, getCurrentUser } from './types/Types'
+import { User } from './types/Types'
 import NewMeal from './screens/NewMeal'
 import MealDetail from './screens/MealDetail'
+import { getStorage } from 'firebase/storage'
 
 const firebaseConfig = {
     apiKey: 'AIzaSyDZEQzH53xpKIw6Cnj0O4DazC_sFT7e560',
@@ -26,6 +27,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 export const auth = getAuth(app)
+export const storage = getStorage(app)
 
 function App() {
     const [user, setUser] = useState<User | undefined>(undefined)

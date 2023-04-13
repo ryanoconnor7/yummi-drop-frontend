@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { User, getCurrentUser } from '../types/Types'
-import { User as FBUser, getAuth, onAuthStateChanged } from 'firebase/auth'
+import { User } from '../types/Types'
+import { User as FBUser, getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
 import { login } from './Login'
 import styled from 'styled-components'
 import blankProfileImage from '../assets/person-circle-outline.png'
@@ -14,14 +14,19 @@ import Modal from '../components/Modal'
 
 const Profile = (props: { user?: User; fbUser?: FBUser | null }) => {
     const navigate = useNavigate()
+    const auth = getAuth()
+
     return (
         <Modal onCancel={() => {}}>
             <Container>
                 <Content>
-                    <ProfileButton src={props.fbUser?.photoURL ?? blankProfileImage} />
-                    <Name>{props.fbUser?.displayName}</Name>
+                    <ProfileButton src={props.user?.profilePicUrl ?? blankProfileImage} />
+                    <Name>
+                        {props.user?.firstName} {props.user?.lastName}
+                    </Name>
                     <NewMealButton onPress={() => navigate('/meal/new')} />
                     <ListSectionHeader>Upcoming Meals</ListSectionHeader>
+                    <button onClick={() => signOut(auth)}>Sign Out</button>
                 </Content>
             </Container>
         </Modal>

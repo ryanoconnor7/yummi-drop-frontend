@@ -1,16 +1,27 @@
 import moment from 'moment'
 import styled from 'styled-components'
 import { Meal, Position } from '../types/Meal'
-import { User } from '../types/Types'
+import { FBUser, User } from '../types/Types'
 import { distanceMiles } from '../utils/LocationUtils'
+import { lightColors } from '../utils/Colors'
 
-function MealRow(props: { meal: Meal; userLoc: Position; onPress: () => void }) {
+function MealRow(props: {
+    meal: Meal
+    userLoc: Position
+    onPress: () => void
+    padding: boolean
+    showPastDates?: boolean
+    fbUser?: FBUser
+}) {
     const distance = distanceMiles(props.userLoc, props.meal.pickupLocation)
     let pickupDate = moment.unix(props.meal.pickupTime._seconds)
     let pickupTimeString = 'Pickup '
     if (pickupDate.isBefore(moment())) {
-        // pickupTimeString += pickupDate.format('M/D')
-        pickupTimeString = 'Ready now'
+        if (props.showPastDates) {
+            pickupTimeString = 'Completed ' + pickupDate.format('M/D')
+        } else {
+            pickupTimeString = 'Ready now'
+        }
     } else if (pickupDate.isSame(moment(), 'days')) {
         pickupTimeString +=
             pickupDate.minutes() > 0 ? pickupDate.format('h:mma') : pickupDate.format('ha')
@@ -20,26 +31,55 @@ function MealRow(props: { meal: Meal; userLoc: Position; onPress: () => void }) 
         pickupTimeString += pickupDate.format('dddd')
     }
 
+    let portions = 0
+    if (props.meal.cooking) {
+        portions = props.meal.portions
+        Object.values(props.meal.reservations ?? {}).forEach(p => (portions += p))
+    } else if (props.meal.reservations?.[props.fbUser?.uid ?? '']) {
+        portions = props.meal.reservations?.[props.fbUser?.uid ?? '']
+    }
+
     return (
-        <Container onClick={props.onPress}>
+        <Container
+            onClick={props.onPress}
+            style={props.padding ? { marginLeft: 24, marginRight: 24 } : {}}
+        >
             <MealImage src={props.meal.imageUrl} />
             <Details>
                 <Title>{props.meal.mealName}</Title>
+                {portions > 0 && (
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        {props.meal.cooking && <Cooking>COOKING</Cooking>}
+                        {portions && (
+                            <Price>
+                                {portions} {'Portion' + (portions === 1 ? '' : 's')}
+                            </Price>
+                        )}
+                    </div>
+                )}
                 <Row>
-                    <LocationPin />
+                    {!props.meal.cooking && <LocationPin />}
                     <Subtitle>
-                        {distance.toFixed(1)} mi・{pickupTimeString}
+                        {`${!props.meal.cooking ? distance.toFixed(1) + ' mi・' : ''}`}
+                        {pickupTimeString}
                     </Subtitle>
                 </Row>
                 <Row>
                     <EnergyIcon />
-                    <Subtitle>{props.meal.calories} calories</Subtitle>
+                    <Subtitle>{props.meal.calories} cal</Subtitle>
                 </Row>
-                <Price>${props.meal.cost.toFixed(2)}</Price>
-                <Row>
-                    <ChefName>{props.meal.chef?.firstName}</ChefName>
-                    <ChefImage src={props.meal.chef?.profilePicUrl} />
-                </Row>
+                <Price>
+                    ${props.meal.cost.toFixed(2)}
+                    {props.meal.cooking && (
+                        <b style={{ fontWeight: 400, color: lightColors.secondaryLabel }}>/ea</b>
+                    )}
+                </Price>
+                {props.meal.chef?.id !== props.fbUser?.uid && (
+                    <Row style={{ position: 'absolute', right: 0, bottom: 0 }}>
+                        <ChefName>{props.meal.chef?.firstName}</ChefName>
+                        <ChefImage src={props.meal.chef?.profilePicUrl} />
+                    </Row>
+                )}
             </Details>
         </Container>
     )
@@ -50,7 +90,6 @@ export default MealRow
 const Container = styled.div`
     display: flex;
     flex-direction: row;
-    margin: 0px 24px;
     padding: 12px 0px;
     border-bottom: 0.5px solid rgba(0, 0, 0, 0.15);
     cursor: pointer;
@@ -64,10 +103,23 @@ const MealImage = styled.img`
 const Details = styled.div`
     flex: 1;
     margin-left: 8px;
+    position: relative;
 `
 const Title = styled.p`
     font-weight: 700;
     font-size: 17px;
+    text-align: left;
+`
+const Cooking = styled.p`
+    font-size: 14.5px;
+    font-weight: 700;
+    margin-top: 2px;
+    text-align: left;
+    background: #ffd80a;
+    border-radius: 8px;
+    padding: 2px 4px;
+    margin-right: 4px;
+    color: #00000088;
 `
 const Subtitle = styled.p`
     font-size: 15px;
@@ -78,6 +130,7 @@ const Price = styled.p`
     font-size: 15px;
     font-weight: 500;
     margin-top: 2px;
+    text-align: left;
     /* margin-bottom: 12px; */
 `
 const Row = styled.div`

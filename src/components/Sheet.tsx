@@ -89,7 +89,7 @@ export const PortionSizeSheet = (
             <PortionSizeTitle>Portion Size</PortionSizeTitle>
             <PortionSize
                 minValue={1}
-                maxValue={8}
+                maxValue={6}
                 setValue={val => setValue(val)}
                 value={value}
                 size={36}

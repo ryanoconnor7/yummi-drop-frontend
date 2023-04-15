@@ -33,14 +33,16 @@ const MealDetail = (props: { user?: User; fbUser?: FBUser | null }) => {
             return
         } else {
             try {
-                const reserveResponse = await reserveMeal(props.fbUser!, meal!, portions)
-                setReservedMeal(reserveResponse.orderedMeal)
+                const reservedMeal = await reserveMeal(props.fbUser!, meal!, portions)
+                setReservedMeal(reservedMeal)
                 setIsReserving(false)
             } catch {
                 setIsReserving(false)
             }
         }
     }
+
+    const reservedPortions = reservedMeal?.reservations?.[props.fbUser?.uid ?? ''] ?? 0
 
     return meal ? (
         <Modal onCancel={() => {}} backButton="prominent">
@@ -124,9 +126,23 @@ const MealDetail = (props: { user?: User; fbUser?: FBUser | null }) => {
                 <Footer>
                     <ContentPadding>
                         {reservedMeal ? (
-                            <ReservedTitle>
-                                {reservedMeal.portions} Portions Reserved!
-                            </ReservedTitle>
+                            <>
+                                <IonIcon
+                                    style={{
+                                        color: lightColors.systemGreen,
+                                        width: 48,
+                                        height: 48,
+                                        marginTop: 4,
+                                        marginBottom: 8
+                                    }}
+                                    name="checkmark-circle-outline"
+                                />
+                                <ReservedTitle>
+                                    {`${reservedPortions} ${
+                                        'portion' + (reservedPortions === 1 ? '' : 's')
+                                    } reserved!`}
+                                </ReservedTitle>
+                            </>
                         ) : (
                             <>
                                 <Row style={{ marginTop: -6, marginBottom: 4 }}>

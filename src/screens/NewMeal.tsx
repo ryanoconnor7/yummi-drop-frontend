@@ -2,7 +2,7 @@ import { User as FBUser } from 'firebase/auth'
 import { User, categories } from '../types/Types'
 import styled from 'styled-components'
 import { Back } from './Profile'
-import { useNavigate } from 'react-router-dom'
+import { HistoryRouterProps, useNavigate } from 'react-router-dom'
 import Modal from '../components/Modal'
 import { lightColors } from '../utils/Colors'
 import { CategorySheet, isDesktop } from '../components/Sheet'
@@ -128,7 +128,7 @@ const NewMeal = (props: { user?: User; fbUser?: FBUser | null }) => {
                     <PortionsWrapper>
                         <PortionSize
                             minValue={1}
-                            maxValue={8}
+                            maxValue={12}
                             setValue={val => setPortions(val)}
                             value={portions}
                             size={18}
@@ -241,7 +241,7 @@ const NewMeal = (props: { user?: User; fbUser?: FBUser | null }) => {
                             paddingBottom: 12
                         }}
                     >
-                        Create
+                        {isCreating ? 'Creating' : 'Create'}
                     </ReserveButton>
                 </Content>
             </Container>

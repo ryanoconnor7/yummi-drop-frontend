@@ -1,11 +1,15 @@
 import { User } from 'firebase/auth'
 
-export async function authenticatedHeaders(fbUser: User) {
+export async function authenticatedHeaders(fbUser?: User, authOptional: boolean = false) {
     const token = await fbUser?.getIdToken()
 
     console.log('Token:', token)
 
-    if (!token) throw 'Missing user or ID token'
+    if (!token && !authOptional) throw 'Missing user or ID token'
 
-    return { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+    const h = {
+        'Content-Type': 'application/json'
+    }
+    if (token) h['Authorization'] = `Bearer ${token}`
+    return h
 }

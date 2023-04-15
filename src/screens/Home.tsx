@@ -42,7 +42,7 @@ export const MAPBOX_API_KEY =
 
 type ModalMode = 'date' | 'category' | 'portions' | undefined
 
-function Home(props: { user?: User }) {
+function Home(props: { user?: User; userLoading: boolean }) {
     const navigate = useNavigate()
 
     // User
@@ -91,13 +91,16 @@ function Home(props: { user?: User }) {
         try {
             let userLoc = await locateUser()
 
-            const meals = await getMeals({
-                portionSize,
-                category,
-                lat: userLoc!._latitude,
-                lon: userLoc!._longitude,
-                pickupDate: date.toString()
-            })
+            const meals = await getMeals(
+                {
+                    portionSize,
+                    category,
+                    lat: userLoc!._latitude,
+                    lon: userLoc!._longitude,
+                    pickupDate: date.toString()
+                },
+                user ?? undefined
+            )
             setMeals(meals)
             const bbox = bboxOfMeals(meals, userLoc)
 
@@ -112,10 +115,8 @@ function Home(props: { user?: User }) {
     }
 
     useEffect(() => {
-        fetchMeals()
-    }, [category, date, portionSize])
-
-    useEffect(() => {})
+        if (!props.userLoading) fetchMeals()
+    }, [category, date, portionSize, props.userLoading])
 
     return (
         <div style={{ height: '100vh', width: '100%' }}>
@@ -211,13 +212,14 @@ function Home(props: { user?: User }) {
                     </Header>
                 }
             >
-                {isLoadingMeals && meals.length === 0 ? (
+                {isLoadingMeals && !meals.length ? (
                     <SpinnerWrapper>
                         <PuffLoader color={lightColors.fillaBlue} />
                     </SpinnerWrapper>
                 ) : meals.length ? (
                     meals.map((meal, i) => (
                         <MealRow
+                            padding={true}
                             key={meal.id}
                             meal={meal}
                             userLoc={{ _latitude: centerCoords[0], _longitude: centerCoords[1] }}
@@ -263,7 +265,9 @@ function Home(props: { user?: User }) {
                         }
                     }
 
-                    navigate('/profile')
+                    navigate('/profile', {
+                        state: { centerCoords }
+                    })
                 }}
             >
                 <ProfileButton src={props.user?.profilePicUrl ?? blankProfileImage} />
@@ -305,7 +309,7 @@ const ProfileButton = styled.img`
     right: 16px;
     cursor: pointer;
 `
-const SpinnerWrapper = styled.div`
+export const SpinnerWrapper = styled.div`
     width: 100%;
     margin-top: 24px;
     padding: 24px;

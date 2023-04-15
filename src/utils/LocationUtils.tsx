@@ -8,13 +8,30 @@ export function distanceMiles(from: Position, to: Position) {
     })
 }
 
+export const FEET_TO_DEG = 1 / 300000.0
+
+export function offsetBoundsByRadius(bounds: number[], radius: number) {
+    let [minLng, minLat, maxLng, maxLat] = bounds
+    minLng -= radius * FEET_TO_DEG
+    maxLng += radius * FEET_TO_DEG
+    minLat -= radius * FEET_TO_DEG
+    maxLat += radius * FEET_TO_DEG
+    return [minLng, minLat, maxLng, maxLat]
+}
+
 export function bboxOfMeals(meals: Meal[], userLoc?: Position) {
     const points = meals.map(m => point([m.pickupLocation._longitude, m.pickupLocation._latitude]))
     console.log('points:', points)
 
     if (userLoc) points.push(point([userLoc._longitude, userLoc._latitude]))
     const collection = featureCollection(points)
-    const bounds = bbox(collection)
+    let bounds: number[] = bbox(collection)
+    let [minLng, minLat, maxLng, maxLat] = bounds
+    if (
+        Math.abs(minLng - maxLng) < 500 / FEET_TO_DEG ||
+        Math.abs(maxLat - minLat) < 500 / FEET_TO_DEG
+    )
+        bounds = offsetBoundsByRadius(bounds, 1000)
     return bounds
 }
 

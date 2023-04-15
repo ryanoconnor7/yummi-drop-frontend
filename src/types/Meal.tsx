@@ -26,6 +26,10 @@ export interface Meal {
     imageUrl: string
     chef?: User
     id: string
+    cooking?: boolean
+    reservations?: {
+        [key: string]: number
+    }
 }
 
 const meal: Meal = {
@@ -55,28 +59,41 @@ export interface GetMealsParams {
     pickupDate: string
 }
 
-export async function getMeals(params: GetMealsParams): Promise<Meal[]> {
+export async function getMeals(params: GetMealsParams, fbUser?: FBUser): Promise<Meal[]> {
     const url = `${BACKEND_URL}/meals?${objToQueryString(params)}`
 
     console.log(url)
-    const res = await fetch(url, { method: 'GET' })
+    const res = await fetch(url, {
+        method: 'GET',
+        headers: await authenticatedHeaders(fbUser, true)
+    })
 
     const json = await res.json()
     console.log('Meals json:', json)
 
-    return json?.meals ?? []
+    return json
 }
 
-interface OrderResponse {
-    meal: Meal
-    orderedMeal: Meal
+export interface ReservedMealsResponse {
+    reserved: Meal[]
+    cooking: Meal[]
+}
+export async function getReservedMeals(fbUser?: FBUser): Promise<ReservedMealsResponse> {
+    const url = `${BACKEND_URL}/meals?reserved=true`
+
+    console.log(url)
+    const res = await fetch(url, {
+        method: 'GET',
+        headers: await authenticatedHeaders(fbUser, true)
+    })
+
+    const json = await res.json()
+    console.log('Meals json:', json)
+
+    return json
 }
 
-export async function reserveMeal(
-    fbUser: FBUser,
-    meal: Meal,
-    portions: number
-): Promise<OrderResponse> {
+export async function reserveMeal(fbUser: FBUser, meal: Meal, portions: number): Promise<Meal> {
     const url = `${BACKEND_URL}/meals/order`
     const params = {
         mealId: meal.id,

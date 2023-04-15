@@ -41,8 +41,15 @@ function App() {
 
     useEffect(() => {
         onAuthStateChanged(auth, newFbUser => {
+            console.log('onAuthStateChanged:', newFbUser)
             setFbUser(newFbUser)
-            if (newFbUser) fetchUser(newFbUser)
+            if (newFbUser) {
+                fetchUser(newFbUser)
+            } else {
+                setUserLoading(false)
+                setFbUser(null)
+                setUser(undefined)
+            }
         })
     }, [])
     return (
@@ -50,7 +57,7 @@ function App() {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <div className="App">
                     <Routes>
-                        <Route path="/" element={<Home user={user} />}>
+                        <Route path="/" element={<Home user={user} userLoading={userLoading} />}>
                             <Route
                                 path="/profile"
                                 element={<Profile user={user} fbUser={auth.currentUser} />}

@@ -70,7 +70,9 @@ const Profile = (props: { user?: User; fbUser?: FBUser | null }) => {
                         <Name>
                             {props.user?.firstName} {props.user?.lastName}
                         </Name>
-                        <NewMealButton onPress={() => navigate('/meal/new')} />
+                        <NewMealButton onPress={() => navigate('/meal/new', {
+                            state: { centerCoords }
+                        })} />
                         <SignOutButton onPress={() => signOut(auth)} />
                         <MealsWrapper>
                             {isLoading && !mealsResponse ? (
@@ -94,8 +96,8 @@ const Profile = (props: { user?: User; fbUser?: FBUser | null }) => {
                                                         _longitude: centerCoords[1]
                                                     }}
                                                     onPress={() =>
-                                                        navigate('meal/1234', {
-                                                            state: { meal, portions: 1 }
+                                                        navigate(`meal/${meal.id}`, {
+                                                            state: { meal, portions: 1 , centerCoords}
                                                         })
                                                     }
                                                 />

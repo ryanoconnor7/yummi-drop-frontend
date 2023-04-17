@@ -13,6 +13,7 @@ import Profile from './screens/Profile'
 import { User } from './types/Types'
 import NewMeal from './screens/NewMeal'
 import MealDetail from './screens/MealDetail'
+import MyMealDetail from './screens/MyMealDetail'
 import { getStorage } from 'firebase/storage'
 
 const firebaseConfig = {
@@ -69,6 +70,10 @@ function App() {
                             <Route
                                 path="/meal/:id"
                                 element={<MealDetail user={user} fbUser={auth.currentUser} />}
+                            />
+                            <Route
+                                path="profile/meal/:id"
+                                element={<MyMealDetail user={user} fbUser={auth.currentUser} />}
                             />
                         </Route>
                     </Routes>

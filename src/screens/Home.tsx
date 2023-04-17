@@ -224,7 +224,7 @@ function Home(props: { user?: User; userLoading: boolean }) {
                             meal={meal}
                             userLoc={{ _latitude: centerCoords[0], _longitude: centerCoords[1] }}
                             onPress={() =>
-                                navigate('meal/1234', { state: { meal, portions: portionSize } })
+                                navigate(`meal/${meal.id}`, { state: { meal, portions: portionSize } })
                             }
                         />
                     ))

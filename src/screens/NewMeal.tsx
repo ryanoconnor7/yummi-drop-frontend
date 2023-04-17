@@ -2,7 +2,7 @@ import { User as FBUser } from 'firebase/auth'
 import { User, categories } from '../types/Types'
 import styled from 'styled-components'
 import { Back } from './Profile'
-import { HistoryRouterProps, useNavigate } from 'react-router-dom'
+import { HistoryRouterProps, useNavigate, useLocation } from 'react-router-dom'
 import Modal from '../components/Modal'
 import { lightColors } from '../utils/Colors'
 import { CategorySheet, isDesktop } from '../components/Sheet'
@@ -37,6 +37,9 @@ const NewMeal = (props: { user?: User; fbUser?: FBUser | null }) => {
     const [price, setPrice] = useState<number>(-1)
     const [priceStr, setPriceStr] = useState<string>('')
     const [portions, setPortions] = useState<number>(4)
+    const { state } = useLocation()
+    const [centerCoords, setCenterCoords] = useState<number[]>(state?.centerCoords)
+
     const [openFileSelector, { filesContent, loading }] = useFilePicker({
         accept: 'image/*',
         multiple: false,
@@ -105,7 +108,9 @@ const NewMeal = (props: { user?: User; fbUser?: FBUser | null }) => {
     return (
         <Modal onCancel={() => {}} backButton="none">
             <Container>
-                <Back className="btn" onClick={() => navigate('/profile')}>
+                <Back className="btn" onClick={() => navigate('/profile', {
+                        state: { centerCoords }
+                    })}>
                     <Cancel>Cancel</Cancel>
                 </Back>
                 <Title>Add New Meal</Title>

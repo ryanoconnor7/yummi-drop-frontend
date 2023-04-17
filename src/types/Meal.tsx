@@ -122,6 +122,7 @@ interface CreateMealParams {
     summary: string
     portions: number
     imageUrl?: string
+    ingredients?: string
 }
 
 export async function createMeal(

@@ -76,7 +76,8 @@ const NewMeal = (props: { user?: User; fbUser?: FBUser | null }) => {
                     pickupLocation: [pickUpLocation!._latitude, pickUpLocation!._longitude],
                     summary: description,
                     portions,
-                    pickupTime: date.format()
+                    pickupTime: date.format(),
+                    ingredients
                 },
                 filesContent[0]?.content,
                 filesContent[0]?.name

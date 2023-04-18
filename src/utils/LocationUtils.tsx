@@ -51,7 +51,7 @@ export async function getCurrentLocation(): Promise<Position | undefined> {
 
 export function getMapPadding(sheetUp: boolean) {
     return {
-        bottom: window.innerHeight * (sheetUp ? 0.6 : 0.2),
+        bottom: window.innerHeight * (sheetUp ? 0.65 : 0.2),
         top: 64,
         left: 16,
         right: 16

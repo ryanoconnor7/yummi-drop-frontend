@@ -188,6 +188,7 @@ const Container = styled.div`
     flex-direction: column;
     position: relative;
     z-index: 99;
+    overflow: scroll;
 `
 const CoverImage = styled.img`
     width: 100%;

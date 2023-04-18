@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { lightColors } from '../utils/Colors'
 
 const SignOutButton = (props: { onPress: () => void }) => (
-    <Container>
+    <Container className="btn" onClick={props.onPress}>
         <NewMealButtonTitle>Sign Out</NewMealButtonTitle>
         <IonIcon
             style={{

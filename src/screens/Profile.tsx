@@ -70,10 +70,19 @@ const Profile = (props: { user?: User; fbUser?: FBUser | null }) => {
                         <Name>
                             {props.user?.firstName} {props.user?.lastName}
                         </Name>
-                        <NewMealButton onPress={() => navigate('/meal/new', {
-                            state: { centerCoords }
-                        })} />
-                        <SignOutButton onPress={() => signOut(auth)} />
+                        <NewMealButton
+                            onPress={() =>
+                                navigate('/meal/new', {
+                                    state: { centerCoords }
+                                })
+                            }
+                        />
+                        <SignOutButton
+                            onPress={() => {
+                                signOut(auth)
+                                navigate(-1)
+                            }}
+                        />
                         <MealsWrapper>
                             {isLoading && !mealsResponse ? (
                                 <SpinnerWrapper>
@@ -97,7 +106,11 @@ const Profile = (props: { user?: User; fbUser?: FBUser | null }) => {
                                                     }}
                                                     onPress={() =>
                                                         navigate(`meal/${meal.id}`, {
-                                                            state: { meal, portions: 1 , centerCoords}
+                                                            state: {
+                                                                meal,
+                                                                portions: 1,
+                                                                centerCoords
+                                                            }
                                                         })
                                                     }
                                                 />
@@ -147,6 +160,7 @@ const ProfileButton = styled.img`
     border-radius: 50px;
     align-self: center;
     background-color: #00000020;
+    object-fit: cover;
     cursor: pointer;
 `
 const Name = styled.p`

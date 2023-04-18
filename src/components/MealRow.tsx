@@ -32,9 +32,12 @@ function MealRow(props: {
     }
 
     let portions = 0
+    let reservedPortions
     if (props.meal.cooking) {
         portions = props.meal.portions
-        Object.values(props.meal.reservations ?? {}).forEach(p => (portions += p))
+        reservedPortions = 0
+        Object.values(props.meal.reservations ?? {}).forEach(p => (reservedPortions += p))
+        portions += reservedPortions
     } else if (props.meal.reservations?.[props.fbUser?.uid ?? '']) {
         portions = props.meal.reservations?.[props.fbUser?.uid ?? '']
     }
@@ -52,7 +55,11 @@ function MealRow(props: {
                         {props.meal.cooking && <Cooking>COOKING</Cooking>}
                         {portions && (
                             <Price>
-                                {portions} {'Portion' + (portions === 1 ? '' : 's')}
+                                {reservedPortions != undefined
+                                    ? `${reservedPortions}/${portions} Portion${
+                                          portions === 1 ? '' : 's'
+                                      } Reserved`
+                                    : `${portions} Portion${portions === 1 ? '' : 's'}`}
                             </Price>
                         )}
                     </div>

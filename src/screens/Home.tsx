@@ -224,7 +224,9 @@ function Home(props: { user?: User; userLoading: boolean }) {
                             meal={meal}
                             userLoc={{ _latitude: centerCoords[0], _longitude: centerCoords[1] }}
                             onPress={() =>
-                                navigate(`meal/${meal.id}`, { state: { meal, portions: portionSize } })
+                                navigate(`meal/${meal.id}`, {
+                                    state: { meal, portions: portionSize }
+                                })
                             }
                         />
                     ))
@@ -307,6 +309,7 @@ const ProfileButton = styled.img`
     position: absolute;
     top: 16px;
     right: 16px;
+    object-fit: cover;
     cursor: pointer;
 `
 export const SpinnerWrapper = styled.div`

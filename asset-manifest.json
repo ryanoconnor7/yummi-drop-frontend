@@ -1,16 +1,17 @@
 {
   "files": {
     "main.css": "/yummi-drop-frontend/static/css/main.0b8a72e2.css",
-    "main.js": "/yummi-drop-frontend/static/js/main.5355b21f.js",
+    "main.js": "/yummi-drop-frontend/static/js/main.9347b0a1.js",
     "static/js/787.1434e6c4.chunk.js": "/yummi-drop-frontend/static/js/787.1434e6c4.chunk.js",
     "static/js/mapbox-gl-csp-worker.eee0f110.worker.js": "/yummi-drop-frontend/static/js/mapbox-gl-csp-worker.eee0f110.worker.js",
+    "static/media/person-circle-outline.png": "/yummi-drop-frontend/static/media/person-circle-outline.cb6dd51d160c3df3ef53.png",
     "index.html": "/yummi-drop-frontend/index.html",
     "main.0b8a72e2.css.map": "/yummi-drop-frontend/static/css/main.0b8a72e2.css.map",
-    "main.5355b21f.js.map": "/yummi-drop-frontend/static/js/main.5355b21f.js.map",
+    "main.9347b0a1.js.map": "/yummi-drop-frontend/static/js/main.9347b0a1.js.map",
     "787.1434e6c4.chunk.js.map": "/yummi-drop-frontend/static/js/787.1434e6c4.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.0b8a72e2.css",
-    "static/js/main.5355b21f.js"
+    "static/js/main.9347b0a1.js"
   ]
 }
